@@ -18,6 +18,7 @@ sommet_plat=0;
 moyenne_sommet_plat=0;
 minima_plat=0;
 moyenne_minima_plat=0;
+BMI= sub.weight/(sub.height)^2;
 
 for i=1:l
     if i<700 %On suppose que le patient est sur du plat pendant au moins 7 sec

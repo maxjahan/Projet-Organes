@@ -20,7 +20,7 @@ for ii = 1:length(sol)
     ind_montee    =  find(true_manoeuvre ==  2);
     ind_descente =  find(true_manoeuvre == 3);
     
-    vecteur = left_hip;
+    vecteur = left_ankle;
     
     marche(ind_marche)    = vecteur(ind_marche);
     montee(ind_montee)    = vecteur(ind_montee);
@@ -31,13 +31,13 @@ for ii = 1:length(sol)
     time_descente = time(ind_descente);
     
     
-    data = left_hip;
+    data = left_ankle;
     moyenne = [];
     
-    for jj = 1:300:length(time)
+    for jj = 1:500:length(time)
         
-        if jj+300 < length(time)
-            moyenne = [moyenne mean(data(1,jj:jj+300))*ones(1,300)];
+        if jj+500 < length(time)
+            moyenne = [moyenne mean(data(1,jj:jj+500))*ones(1,500)];
         else
             moyenne = [moyenne mean(data(1,jj:end))*ones(1,length(data(jj:end)))];
         end
