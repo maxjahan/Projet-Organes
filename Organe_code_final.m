@@ -9,8 +9,8 @@
 close all
 
 a=0;
-b=0; %compteur minima
-c=0; %compteur maxima
+b=0; %compteur maxima
+c=0; %compteur minima
 compteur = 0;
 l = length(time_vect);
 answer = zeros(1,l);
@@ -25,7 +25,7 @@ for i=1:l
        answer(i)=1; % on est sur du plat
        if i>2 && right_hip(i)<right_hip(i-1) && right_hip(i-1)>right_hip(i-2)%si c'est un sommet
            b = b+1;
-           sommet_plat(b)=right_hip(i);%matrice avec vleur des sommets
+           sommet_plat(b)=right_hip(i);%matrice avec valeurs des sommets
        elseif i>2 && right_hip(i)>right_hip(i-1) && right_hip(i-1)<right_hip(i-2)%si c'est un minima
            c = c+1;
            minima_plat(c)=right_hip(i);%matrice avec valeur des minima
@@ -39,8 +39,8 @@ for i=1:l
             plot(right_hip_2)
             %moyenne_sommet_plat = 1;
             %moyenne_minima_plat = -1;
-    elseif right_hip_2(i)>right_hip_2(i-1) && right_hip_2(i-1)<right_hip_2(i-2)% son c'est un minima
-        if right_hip_2(i)<-1.8 % et qu'il est plsu petit que -1.8
+    elseif right_hip_2(i)>right_hip_2(i-1) && right_hip_2(i-1)<right_hip_2(i-2)% sinon c'est un minima
+        if right_hip_2(i)<-1.8 % et qu'il est plus petit que -1.8
             answer(i)=2;% on est sur d'être en montée
         else answer(i) = answer(i-1);% sin le minima est ailleur on ne peut déterminer ou on se trouve donc on suppose que la situaion est la même qu'avant. 
         end
@@ -56,9 +56,6 @@ for i=1:l
             else
                 answer(i)=3; % sinon on descend
                 compteur = 0;
-                valeur = right_hip_2(i)
-                val_1 = right_hip_2(i-1)
-                val_4 = right_hip_2(i-4)
             end    
         else answer(i)=answer(i-1);%si le max n'est pas entre ces valeur on ne peut déterminer avec certitude -> comme avant
         end
