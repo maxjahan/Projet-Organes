@@ -41,11 +41,14 @@ sommet_plat_ankle=0;
 moyenne_sommet_plat_ankle=0;
 minima_plat_ankle=0;
 moyenne_minima_plat_ankle=0;
+ankleChangement = false;
+
+BMI=(sub.weight)/(sub.height)^2;
+
+kneeChangement = false;
 
 answer_hanche_g = 0;
 answer_hanche_d = 0;
-answer_knee= [0 0];
-answer_ankle = [0 0];
 
 
 answerFinale = zeros(1,l);
@@ -168,8 +171,7 @@ for i=1:l
   if i>700 
     if left_knee(i)>left_knee(i-k) && left_knee(i-k)<left_knee(i-2*k)% si on a un minima
         if left_knee(i) <110 % plus petit que 110
-            answer_knee = [2 3];
-        else answer_knee = [0 0];
+            kneeChangement=true;
         end
     end
   end
@@ -219,36 +221,40 @@ for i=1:l
             %moyenne_sommet_plat = 1;
             %moyenne_minima_plat = -1;
             
-    elseif left_ankle_2(i)<left_ankle_2(i-1) && left_ankle_2(i-1)>left_ankle_2(i-4)%si on a un maximum
-        if left_ankle_2(i)>0.4 %et qu'il est plus grand que 0.4
-            answer_ankle=[1 3];%on est sur d'être sur du plat
-            %sommet_plat(i)=right_hip(i);
-            %moyenne_sommet_plat = mean(sommet_plat);
-   
-        else
-            answer_ankle=3; % sinon on descend
-            compteur_ankle = 0;
-        end
+  elseif left_ankle_2(i)<left_ankle_2(i-1) && left_ankle_2(i-1)>left_ankle_2(i-4)%si on a un maximum
+      if (BMI<21 && left_ankle_2(i)>0.5) || (BMI>20 && left_ankle_2(i)>0.65)
+          %on est sur d'être sur du plat ou descente
+          ankleChangement=true;       
+      else
+          % sinon on ne sait rien dire
+          compteur_ankle = 0;
+      end
         %else answerl(i)=answerl(i-1);%si le max n'est pas entre ces valeur on ne peut déterminer avec certitude -> comme avant
   end
         %else answerl(i) = answerl(i-1);
 
-
-
-  
-  
    
-   %% AnswerFinale
-       
-    if answer_knee(1) == 2  && answer_knee(2) == 3
-    answer = [answer_hanche_g answer_hanche_d answer_knee];
-    answerFinale(i) = mode(answer)  ;
-    else 
-        if answer_hanche_g==answer_hanche_d
-            answerFinale(i) = answer_hanche_g;
-        else answerFinale(i) = answerFinale(i-1);
+        %% AnswerFinale
+        answer = [answer_hanche_g answer_hanche_d];
+        if kneeChangement
+            answer = [answer 2 3];
         end
-    end
+        if ankleChangement
+            answer = [answer 1 3];
+        end
+        countOne = sum(answer==1);
+        countTwo = sum(answer==2);
+        countThree=sum(answer==3);
+        Combine=[countOne countTwo countThree];
+        maxval=0;
+        maxval= max(Combine);
+        idx = find(Combine == maxval);
+       
+        if length(idx) >1
+        answerFinale(i) = answerFinale(i-1);
+           
+        else answerFinale(i) = mode(answer);
+        end
 end
 figure
 plot(time_vect,answerFinale, '.-b')
