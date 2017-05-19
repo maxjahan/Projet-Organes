@@ -26,7 +26,7 @@ compteur2R = 0;
 compteur3R = 0;
 
 %% variables KNEE %%
-answer_knee = zeros(1,2); % reponse obtenue en regardant uniquement le genou gauche
+answer_knee = zeros(1,2); % r?ponse obtenue en regardant uniquement le genou gauche
 
 
 %% Code %%
@@ -94,18 +94,18 @@ for i = 1:l
             answerFinale(i) = mode([answerLeft answerRight answer_knee]); % on cherche le mode de nos reponses
         elseif answerLeft == answerRight % sinon on observe que les haches. Si elles sont egales
             answerFinale(i) = answerLeft; % alors pas de souci, on est sur de la reponse.
-        else answerFinale(i) = answerFinale(i-1); % sinon, dans le doute, on considere que la situation ne change pas par rapport a l'iteration precedente.
+        else answerFinale(i) = answerFinale(i-1); % sinon, dans le doute, on considere que la situation ne chang pas par rapport a l'iteration pr?c?dente.
     end
     
 end
 
-%Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de reponses correctes
+Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de r?ponses correctes
 
 figure
 plot(time_vect, answerFinale, '.-b')
 hold on 
 plot(time_vect, true_manoeuvre, '--r')
-legend('reponse obtenue','reponse donnee')
+legend('r?ponse obtenue','r?ponse donn?e')
 
 figure
 plot(time_vect, left_hip, 'ob', 'markersize', 4)
@@ -113,4 +113,4 @@ hold on
 plot(time_vect, maxInstant, '-g', 'markersize', 8 )
 hold on
 plot(time_vect, minInstant,'-r', 'markersize', 8)
-legend('angle hanche gauche','enveloppe superieure','enveloppe inferieure')
+legend('angle hanche gauche','enveloppe sup?rieure','enveloppe inf?rieure')
