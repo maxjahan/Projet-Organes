@@ -64,27 +64,26 @@ for i=1:l
         %moyenne_minima_plat = -1;
         
     elseif left_ankle_2(i)<left_ankle_2(i-1) && left_ankle_2(i-1)>left_ankle_2(i-4)%si on a un maximum
-        if (BMI<21 && left_ankle_2(i)>0.84) || (sub.gender=='F' && left_ankle_2(i)>1.28) || (sub.gender=='M'&&BMI>21 && left_ankle_2(i)>0.65)
+        if (sub.gender=='M' && BMI<21 && left_ankle_2(i)>0.84) || (sub.gender=='F' && left_ankle_2(i)>1.28) || (sub.gender=='M'&&BMI>21 && left_ankle_2(i)>0.65)
             %on est sur d'etre sur du plat ou descente
             ankleChangement=true;
         else
             % sinon on n'a pas de nouvelles infos
             compteur_ankle = 0;
         end
-        %else answerl(i)=answerl(i-1);%si le max n'est pas entre ces valeur on ne peut d?terminer avec certitude -> comme avant
+        %else answerl(i)=answerl(i-1); %si le max n'est pas entre ces valeur on ne peut d?terminer avec certitude -> comme avant
     end
     %else answerl(i) = answerl(i-1);
     
     %% AnswerFinale
     if ankleChangement
-        answerFinale(i) = 1;
-    
+        answerFinale(i) = 1; %on rajoute 1 et 3 dans les propositions
     else
         answerFinale(i)= 0;
     end
     ankleChangement=false;
 end
 figure
-plot(time_vect,answerFinale*100, '.-b')
+plot(time_vect,answerFinale, '.-b')
 hold on
-plot(time_vect,left_ankle, '--r')
+plot(time_vect,true_manoeuvre, '--r')
