@@ -14,7 +14,12 @@
 close all
 
 BMI = sub.weight/(sub.height)^2;
+<<<<<<< Updated upstream
 BMI2=sub.weight/(sub.height);
+=======
+BMI2 = sub.weight/(sub.height);
+
+>>>>>>> Stashed changes
 l = length(time_vect);
 
 a=0;
@@ -192,6 +197,7 @@ for i=1:l
         end
     elseif i==700
         a_ankle=(a_ankle+left_ankle(i))/700;%valeur moyenne plat
+<<<<<<< Updated upstream
         ankleIsNot2=true;
         left_ankle_2 = (left_ankle-a_ankle)/(sommet_plat_ankle_max-sommet_plat_ankle_min);%on normalise la fonction
         figure
@@ -201,6 +207,42 @@ for i=1:l
         if (sub.gender=='M' && BMI<21 && left_ankle_2(i)>0.84) || (sub.gender=='F' && left_ankle_2(i)>1.28) || (sub.gender=='M'&&BMI>21 && left_ankle_2(i)>0.65)
             %on est sur d'etre sur du plat ou descente
             ankleIsNot2=true;
+=======
+        ankleChangement=true;
+        moyenne_sommet_plat_ankle = mean(sommet_plat_ankle);%valeur moyenne sommets sur plat
+        moyenne_minima_plat_ankle = mean(minima_plat_ankle);%valeur moyenne minima sur plat
+        left_ankle_2 = (left_ankle-a_ankle)/(moyenne_sommet_plat_ankle-moyenne_minima_plat_ankle);%on normalise la fonction (? faire au fur et ? mesure dans la version finale!!!!!)
+        figure
+        plot(left_ankle_2)
+        hold on
+        line([1 l],[0.1 0.1],'Color','red')
+        hold on
+        line([1 l],[0.2 0.2],'Color','red')
+        hold on
+        line([1 l],[0.3 0.3],'Color','red')
+        hold on
+        line([1 l],[0.4 0.4],'Color','red')
+        hold on
+        line([1 l],[0.5 0.5],'Color','red')
+        hold on
+        line([1 l],[0.6 0.6],'Color','red')
+        hold on
+        line([1 l],[-0.1 -0.1],'Color','red')
+        hold on
+        line([1 l],[-0.2 -0.2],'Color','red')
+        hold on
+        line([1 l],[-0.3 -0.3],'Color','red')
+        hold on
+        line([1 l],[-0.4 -0.4],'Color','red')
+        hold on
+        line([1 l],[-0.5 -0.5], 'Color','red')
+        title('left ankle')
+       
+    elseif left_ankle_2(i)<left_ankle_2(i-1) && left_ankle_2(i-1)>left_ankle_2(i-4)%si on a un maximum
+        if (BMI<21 && sub.gender=='M' && left_ankle_2(i)>0.84) || (sub.gender=='F' && left_ankle_2(i)>1.28) || (sub.gender=='M'&&BMI>21 && left_ankle_2(i)>0.65)
+            %on est sur d'etre sur du plat ou descente
+            ankleChangement=true; % 1 ou 3
+>>>>>>> Stashed changes
         else
             % sinon on n'a pas de nouvelles infos
             compteur_ankle = 0;
@@ -219,7 +261,7 @@ for i=1:l
     if i>700
         if left_knee(i)>left_knee(i-1) && left_knee(i-1)<left_knee(i-2) %si on a un minimum
             if left_knee(i) <110 % plus petit que 110
-                kneeChangement=true;
+                kneeChangement=true; % 2ou 3
             end
         end
     end
