@@ -38,6 +38,9 @@ compteur_ankle=0;
 
 BMI=(sub.weight)/(sub.height)^2;
 
+AnkleIsNot2=zeros(l);
+AnkleIs3=zeros(l);
+
 %% Code %%
 
 for i = 1:l
@@ -90,33 +93,36 @@ for i = 1:l
       else answer_knee = [0 0]; % sinon on ne peut pas donner d'info utile
       end
     end
-  
+    
     %% Cheville gauche
-    if i<700 %On suppose que le patient est sur du plat pendant au moins 7 sec
+    if i<150 %On suppose que le patient est sur du plat pendant au moins 1,5 sec
         a_ankle=a_ankle+left_ankle(i); % pour pouvoir calculer la valeur moyenne
         ankleIsNot2=true; % on est sur du plat
+        AnkleIsNot2(i)=1;
         if left_ankle(i)>sommet_plat_ankle_max
             sommet_plat_ankle_max = left_ankle(i);
         elseif left_ankle(i)<sommet_plat_ankle_min
             sommet_plat_ankle_min = left_ankle(i);
         end
-    elseif i==700
-        a_ankle=(a_ankle+left_ankle(i))/700;%valeur moyenne plat
+    elseif i==150
+        a_ankle=(a_ankle+left_ankle(i))/150;%valeur moyenne plat
         ankleIsNot2=true;
-        left_ankle_2 = (left_ankle-a_ankle)/(sommet_plat_ankle_max-sommet_plat_ankle_min);%on normalise la fonction (? faire au fur et ? mesure dans la version finale!!!!!)
-    elseif left_ankle_2(i)<left_ankle_2(i-1) && left_ankle_2(i-1)>left_ankle_2(i-4)%si on a un maximum
-        if (sub.gender=='M' && BMI<21 && left_ankle_2(i)>0.84) || ...
-                (sub.gender=='F' && left_ankle_2(i)>1.28) || ...
-                (sub.gender=='M'&&BMI>21 && left_ankle_2(i)>0.65)
+        AnkleIsNot2(i)=1;
+        left_ankle_2 = (left_ankle-a_ankle)/(sommet_plat_ankle_max-sommet_plat_ankle_min);%on normalise la fonction
+        
+    elseif left_ankle_2(i)<left_ankle_2(i-1) && left_ankle_2(i-1)>left_ankle_2(i-2)%si on a un maximum
+        if (sub.gender=='M' && BMI<21 && left_ankle_2(i)>0.84) || (sub.gender=='F' && left_ankle_2(i)>1.28) || (sub.gender=='M'&& BMI>21 && left_ankle_2(i)>0.75)
             ankleIsNot2=true; %on est sur d'etre sur du plat ou descente
+            AnkleIsNot2(i)=1;
         else
             compteur_ankle = 0; %sinon on n'a pas de nouvelles infos
         end
-    elseif std(left_ankle_2(i-150:i))*BMI- std(left_ankle_2(1:150))*BMI > 2.1
+    elseif std(left_ankle_2(i-150:i))*BMI- std(left_ankle_2(1:150))*BMI > 4.4
         if answerFinale(i-1) == 2 && compteur_ankle <100 %ne peut pas redescendre dans la seconde quand il est sur du plat
             compteur_ankle = compteur_ankle+1;
         else
             ankleIs3 = true;
+            AnkleIs3(i)=3;
             compteur_ankle = 0;
         end
     end
@@ -141,6 +147,13 @@ for i = 1:l
 end
 
 Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de reponses correctes
+
+figure
+plot(time_vect,AnkleIs3,'.b')
+hold on 
+plot(time_vect,AnkleIsNot2,'ob')
+% hold on
+% plot(time_vect, true_manoeuvre, '--r')
 
 figure
 plot(time_vect, answerFinale, '.-b')
