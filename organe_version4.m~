@@ -71,7 +71,7 @@ for i=1:l
         a=(a+right_hip(i))/700;%valeur moyenne plat
         answer_hanche_d=1;
         right_hip_2 = (right_hip-a)/(sommet_plat_max-sommet_plat_min);%on normalise la fonction (a faire au fur et a mesure dans la version finale!!!!!)
-        plot(time_vect,right_hip_2)
+        plot(right_hip_2)
     elseif right_hip_2(i) > 0.3
         answer_hanche_d = 1;
     elseif right_hip_2(i) < -0.8
@@ -215,7 +215,7 @@ for i=1:l
     %% Genou Gauche
     
     if i>700
-        if left_knee(i)>left_knee(i-1) && left_knee(i-1)<left_knee(i-2) %si on a un minimum
+        if left_knee(i)>left_knee(i-k) && left_knee(i-k)<left_knee(i-2*k) %si on a un minimum
             if left_knee(i) <110 % plus petit que 110
                 kneeChangement=true;
             end
@@ -235,7 +235,6 @@ for i=1:l
     end
 
     [t1,t2,t3] = mode(answer);
-    t3 = cell2mat(t3);
     if length(t3) > 1 %si on a plusieurs valeurs qui aparaissent le plus souvent...
         answerFinale(i) = answerFinale(i-1); %...on prend la valeur d'avant
     else
