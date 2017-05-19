@@ -110,10 +110,6 @@ close all
 %     end
 %     %else answerl(i) = answerl(i-1);
 % end
-%% variables communes %%
-l = length(time_vect);
-answerTous = zeros(1, 4); % vecteur contenant toutes les possibilites pour un instant donne
-answerFinale = zeros(1,l); % vecteur contenant la reponse pour chaque instant
 
 %% variables ANKLE %%
 answerAnkle = zeros(1,2);
@@ -122,6 +118,10 @@ minInstantA = zeros(1,l);
 compteur2A = 0;
 compteur3A = 0;
 
+%% variables communes %%
+l = length(time_vect);
+answerTous = zeros(1, 4); % vecteur contenant toutes les possibilites pour un instant donne
+answerFinale = zeros(1,l); % vecteur contenant la reponse pour chaque instant
 
 %% Code %%
 
@@ -134,6 +134,8 @@ for i=1:l
         maxInstantA(i) = max(left_ankle(i-149:i)); % on recalcule donc le max
         minInstantA(i) = min(left_ankle(i-149:i)); % et le min. En fonction de leur valeurs, on avise:
         if  maxInstantA(i) > maxInstantA(1)- maxInstantA(1)*0.035 % si le max est au dessus de celui du plat + un certain pourcentage
+            if sub.gender=='M'
+                if BMI<21 && left_ankle_2(i)>0.84)
             %sub.gender=='M' && BMI<21 && left_ankle_2(i)>0.84) || (sub.gender=='F' && left_ankle_2(i)>1.28) || (sub.gender=='M'&&BMI>21 && left_ankle_2(i)>0.65)
             answerAnkle = 1; % on sait qu'on est sur du plat
             compteur3A = 0;
@@ -150,47 +152,41 @@ for i=1:l
     
     
     %% AnswerFinale
-%     if ankleIsNot2
-%         answerFinale1(i) = 1; %on rajoute 1 et 3 dans les propositions
-%     else
-%         answerFinale1(i)= 0;
-%     end
-%     ankleIsNot2=false;
-%     if ankleIs3
-%         answerFinale2(i) = 3; %on rajoute 1 et 3 dans les propositions
-%     else
-%         answerFinale2(i)= 0;
-%     end
-%     ankleIs3=false;
+    if ankleIsNot2
+        answerFinale1(i) = 1; %on rajoute 1 et 3 dans les propositions
+    else
+        answerFinale1(i)= 0;
+    end
+    ankleIsNot2=false;
+    if ankleIs3
+        answerFinale2(i) = 3; %on rajoute 1 et 3 dans les propositions
+    else
+        answerFinale2(i)= 0;
+    end
+    ankleIs3=false;
 end
 
-figure;
-plot(time_vect,maxInstantA(i)-minInstantA(i));
+figure
+plot(time_vect,answerFinale1, '.-b')
+hold on
+plot(time_vect,true_manoeuvre, '--r')
+legend('ankleIsNot2','Reponse');
 
-% figure
-% plot(time_vect,answerFinale1, '.-b')
-% hold on
-% plot(time_vect,true_manoeuvre, '--r')
-% legend('ankleIsNot2','Reponse');
-% 
-% figure
-% plot(time_vect,answerFinale2, '.-b')
-% hold on
-% plot(time_vect,true_manoeuvre, '--r')
-% legend('ankleIs3','Reponse');
+figure
+plot(time_vect,answerFinale2, '.-b')
+hold on
+plot(time_vect,true_manoeuvre, '--r')
+legend('ankleIs3','Reponse');
 
-% figure;
-% plot(time_vect,left_hip);
-% 
-% q = 150;
-% l = length(time_vect);
-% movingSTD = zeros(1, l-q);
-% for p= q+1:l
-%     movingSTD(p-q) = std(left_ankle_2(p-q:p))*BMI;
-% end
-% figure
-% plot(time_vect(151:end),movingSTD-movingSTD(1))
-% hold on
-% %line([1 l-q],[15 15],'Color','red')
-% grid on
-% title('standard dev')
+q = 150;
+l = length(time_vect);
+movingSTD = zeros(1, l-q);
+for p= q+1:l
+    movingSTD(p-q) = std(left_ankle_2(p-q:p))*BMI;
+end
+figure
+plot(time_vect(151:end),movingSTD-movingSTD(1))
+hold on
+%line([1 l-q],[15 15],'Color','red')
+grid on
+title('standard dev')

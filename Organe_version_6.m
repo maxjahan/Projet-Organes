@@ -13,8 +13,6 @@ answerFinale = zeros(1,l); % vecteur contenant la reponse pour chaque instant
 maxInstant = zeros(1,l); % valeurs max de left hip entre l'instant donne et les 149 precedents
 minInstant = zeros(1,l); % valeurs min de left hip entre l'instant donne et les 149 precedents
 answerLeft = 0; % la reponse pour un instant donne en ne regardant que la hanche gauche
-compteur2 = 0;
-compteur3 = 0;
 
 
 %% variables RIGHT HIP %%
@@ -22,8 +20,6 @@ compteur3 = 0;
 maxInstantR = zeros(1,l); % meme principe que pour la hanche gauche
 minInstantR = zeros(1,l);
 answerRight = 0;
-compteur2R = 0;
-compteur3R = 0;
 
 %% variables KNEE %%
 answer_knee = zeros(1,2); % reponse obtenue en regardant uniquement le genou gauche
@@ -44,12 +40,9 @@ for i = 1:l
         minInstant(i) = min(left_hip(i-149:i)); % et le min. En fonction de leur valeurs, on avise:
         if minInstant(i) < minInstant(1) - minInstant(1)*0.1 % si le min est inferieur a celui du plat - un certain pourcentage
             answerLeft = 2; % on sait qu'on monte
-        elseif  maxInstant(i) > maxInstant(1)- maxInstant(1)*0.035 % si le max est au dessus de celui du plat + un certain pourcentage
+        elseif  maxInstant(i) > maxInstant(1)- maxInstant(1)*0.035 % si le max est au dessus de celui du plat - un certain pourcentage
             answerLeft = 1; % on sait qu'on est sur du plat
-            compteur3 = 0;
-            compteur2 = 0;
         elseif maxInstant(i)-minInstant(i) < (maxInstant(1)-minInstant(1))*0.85 % si la variance est inferieure a un certain pourcentage de la variance du plat
-            compteur3 = 0;
             answerLeft = 3; % on sait qu'on descend        
         % si on entre dans aucune de ces conditions, answerLeft garde la
         % meme valeur qu'a l'iteration precedente.
@@ -70,8 +63,6 @@ for i = 1:l
         elseif maxInstantR(i)-minInstantR(i) < (maxInstantR(1)-minInstantR(1))*0.9
             answerRight = 3;            
         elseif  maxInstantR(i) > maxInstantR(1)- maxInstantR(1)*0.045
-            compteur3R = 0;
-            compteur2R = 0;
             answerRight = 1;
         end
     end
