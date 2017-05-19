@@ -16,7 +16,6 @@ BMI = sub.weight/(sub.height)^2;
 BMI2=sub.weight/(sub.height);
 l = length(time_vect);
 
-k=1;
 a=0;
 b=0; %compteur minima
 c=0; %compteur maxima
@@ -242,32 +241,32 @@ for i=1:l
         answerFinale(i) = t1; %...sinon on prend la valeur qui apparait le plus souvent
     end
 end
-figure
-plot(time_vect,answerFinale, '.-b')
-hold on
-plot(time_vect,true_manoeuvre, '--r')
-%figure
-%plot(right_hip)
-
-q = 150;
-l = length(time_vect);
-movingSTD = zeros(1, l-q);
-for p= q+1:l
-    movingSTD(p-q) = std(left_hip_2(p-q:p))*BMI;
-end
-figure
-plot(movingSTD-movingSTD(1))
-hold on
-%line([1 l-q],[15 15],'Color','red')
-grid on
-title('standard dev')
-
-for p= q+1:l
-    movingSTD(p-q) = std(right_hip_2(p-q:p))*BMI;
-end
-figure
-plot(movingSTD-movingSTD(1))
-hold on
-%line([1 l-q],[15 15],'Color','red')
-grid on
-title('standard dev')
+% figure
+% plot(time_vect,answerFinale, '.-b')
+% hold on
+% plot(time_vect,true_manoeuvre, '--r')
+% %figure
+% %plot(right_hip)
+% 
+% q = 150;
+% l = length(time_vect);
+% movingSTD = zeros(1, l-q);
+% for p= q+1:l
+%     movingSTD(p-q) = std(left_hip_2(p-q:p))*BMI;
+% end
+% figure
+% plot(movingSTD-movingSTD(1))
+% hold on
+% %line([1 l-q],[15 15],'Color','red')
+% grid on
+% title('standard dev')
+% 
+% for p= q+1:l
+%     movingSTD(p-q) = std(right_hip_2(p-q:p))*BMI;
+% end
+% figure
+% plot(movingSTD-movingSTD(1))
+% hold on
+% %line([1 l-q],[15 15],'Color','red')
+% grid on
+% title('standard dev')
