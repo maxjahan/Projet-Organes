@@ -1,16 +1,17 @@
 %code sans long vecteur sauf le final ou on analyse donn?e par donn?e et on
-%donne une valeur ? cette donn?e.
+%donne une valeur e cette donnee.
 
-%Hypoth?ses: -pendant les 7 premi?res secondes au moins, il est sur du plat
+%Hypotheses: -pendant les 7 premi?res secondes au moins, il est sur du plat
 %            - Il y a au moins une seconde de marche entre une mont?e et
 %            une descente
 %Algo: on calcul la valeur moyenne de l'angle de la hanche sur du plat
 %pendant les 7 premi?re secondes. On normalise pour que les cycles sur plat
 %soient compris entr -1 et 1.
-%Ensuite, en analysant les ?cart des pics par rapport ? cette valeur moyenne, on d?termine sur quel type de
-%terrain on se trouve (plat, escaliers en mont?e, escaliers en descente).
-close all
+%Ensuite, en analysant les ecarts des pics par rapport e cette valeur moyenne, 
+%on determine sur quel type de terrain on se trouve (plat, escaliers en 
+%montee, escaliers en descente).
 
+close all
 
 BMI = sub.weight/(sub.height)^2;
 BMI2=sub.weight/(sub.height);
