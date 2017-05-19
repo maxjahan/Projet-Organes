@@ -45,7 +45,7 @@ for i=1:l
     
     %% Hanche Droite
     
-    if i<150 %On suppose que le patient est sur du plat pendant au moins 7 sec
+    if i<700 %On suppose que le patient est sur du plat pendant au moins 7 sec
        a=a+right_hip(i); % pour pouvoir calculer la valeur moyenne
        answer_hanche_d=1; % on est sur du plat
        if right_hip(i)>sommet_plat_max
@@ -53,8 +53,8 @@ for i=1:l
        elseif right_hip(i)<sommet_plat_min
            sommet_plat_min = right_hip(i);
        end
-    elseif i==150
-            a=(a+right_hip(i))/150;%valeur moyenne plat
+    elseif i==700
+            a=(a+right_hip(i))/700;%valeur moyenne plat
             answer_hanche_d=1;
             right_hip_2 = (right_hip-a)/(sommet_plat_max-sommet_plat_min);%on normalise la fonction (à faire au fur et à mesure dans la version finale!!!!!)
             plot(right_hip_2)
@@ -167,4 +167,4 @@ plot(time_vect,true_manoeuvre, '--r')
 % grid on
 % title('standard dev')
 
-Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100
+Pourcent = answerFinale-true_manoeuvre

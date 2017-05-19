@@ -129,13 +129,12 @@ figure
 plot(time_vect,answerFinale1, '.-b')
 hold on
 plot(time_vect,true_manoeuvre, '--r')
-legend('ankleIsNot2','Reponse');
+l
 
 figure
 plot(time_vect,answerFinale2, '.-b')
 hold on
 plot(time_vect,true_manoeuvre, '--r')
-legend('ankleIs3','Reponse');
 
 q = 150;
 l = length(time_vect);
