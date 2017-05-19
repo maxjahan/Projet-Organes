@@ -1,5 +1,5 @@
 s = struct();
-folder = 'C:\Users\Maxime\Documents\UNIF\Q6\Organes\data'; %// Place directory here
+folder = '/Users/fionamilano/Desktop/Q6/organes/data'; %// Place directory here
 
 %// Récupère tout les fichiers
 f = dir(fullfile(folder, '*.mat'));
