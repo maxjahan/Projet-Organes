@@ -72,10 +72,8 @@ for i=1:l
         moyenne_sommet_plat = mean(sommet_plat);%valeur moyenne sommets sur plat
         moyenne_minima_plat = mean(minima_plat);%valeur moyenne minima sur plat
         right_hip_2 = (right_hip-a)/(moyenne_sommet_plat-moyenne_minima_plat);%on normalise la fonction (à faire au fur et à mesure dans la version finale!!!!!)
-        %plot(right_hip_2)
-        %moyenne_sommet_plat = 1;
-        %moyenne_minima_plat = -1;
-    elseif right_hip_2(i)>right_hip_2(i-1) && right_hip_2(i-1)<right_hip_2(i-2)% son c'est un minima
+     
+    elseif right_hip_2(i)>right_hip_2(i-1) && right_hip_2(i-1)<right_hip_2(i-2)% sinon c'est un minima
         if right_hip_2(i)<-1.8 % et qu'il est plsu petit que -1.8
             answer_hanche_d=2;% on est sur d'être en montée
             %else answer(i) = answer(i-1);% sin le minima est ailleur on ne peut déterminer ou on se trouve donc on suppose que la situaion est la même qu'avant.
@@ -188,7 +186,7 @@ for i=1:l
         end
     elseif i==700
         a_ankle=(a_ankle+left_ankle(i))/700;%valeur moyenne plat
-        answer_ankle=[1 1];
+        ankleChangement=true;
         moyenne_sommet_plat_ankle = mean(sommet_plat_ankle);%valeur moyenne sommets sur plat
         moyenne_minima_plat_ankle = mean(minima_plat_ankle);%valeur moyenne minima sur plat
         left_ankle_2 = (left_ankle-a_ankle)/(moyenne_sommet_plat_ankle-moyenne_minima_plat_ankle);%on normalise la fonction (? faire au fur et ? mesure dans la version finale!!!!!)
