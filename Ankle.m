@@ -1,27 +1,27 @@
 close all
 
-a_ankle=0;
-b_ankle=0;
-c_ankle=0;
-compteur_ankle=0;
-sommet_plat_ankle=0;
-moyenne_sommet_plat_ankle=0;
-minima_plat_ankle=0;
-moyenne_minima_plat_ankle=0;
-ankleIsNot2 = false;
-ankleIs3 = false;
+% a_ankle=0;
+% b_ankle=0;
+% c_ankle=0;
+% compteur_ankle=0;
+% sommet_plat_ankle=0;
+% moyenne_sommet_plat_ankle=0;
+% minima_plat_ankle=0;
+% moyenne_minima_plat_ankle=0;
+% ankleIsNot2 = false;
+% ankleIs3 = false;
+% 
+% sommet_plat_ankle_max=0;
+% sommet_plat_ankle_min=2000;
+% 
+% BMI=(sub.weight)/(sub.height)^2;
+% l = length(time_vect);
+% answerFinale = zeros(1,l);
 
-sommet_plat_ankle_max=0;
-sommet_plat_ankle_min=2000;
-
-BMI=(sub.weight)/(sub.height)^2;
-l = length(time_vect);
-answerFinale = zeros(1,l);
 
 
-
-for i=1:l
-    %% Left Ankle
+% for i=1:l
+    % Left Ankle
     %     if i<700 %On suppose que le patient est sur du plat pendant au moins 7 sec
     %         a_ankle=a_ankle+left_ankle(i); % pour pouvoir calculer la valeur moyenne
     %         ankleChangement=true; % on est sur du plat
@@ -76,39 +76,66 @@ for i=1:l
     %         end
     %         %else answerl(i)=answerl(i-1); %si le max n'est pas entre ces valeur on ne peut d?terminer avec certitude -> comme avant
     
-    if i<700 %On suppose que le patient est sur du plat pendant au moins 7 sec
-        a_ankle=a_ankle+left_ankle(i); % pour pouvoir calculer la valeur moyenne
-        ankleIsNot2=true; % on est sur du plat
-        if left_ankle(i)>sommet_plat_ankle_max
-            sommet_plat_ankle_max = left_ankle(i);
-        elseif left_ankle(i)<sommet_plat_ankle_min
-            sommet_plat_ankle_min = left_ankle(i);
-        end
-    elseif i==700
-        a_ankle=(a_ankle+left_ankle(i))/700;%valeur moyenne plat
-        ankleIsNot2=true;
-        left_ankle_2 = (left_ankle-a_ankle)/(sommet_plat_ankle_max-sommet_plat_ankle_min);%on normalise la fonction (? faire au fur et ? mesure dans la version finale!!!!!)
-        figure
-        plot(left_ankle_2)
-        title('left ankle-2')
-    elseif left_ankle_2(i)<left_ankle_2(i-1) && left_ankle_2(i-1)>left_ankle_2(i-4)%si on a un maximum
-        if (sub.gender=='M' && BMI<21 && left_ankle_2(i)>0.84) || (sub.gender=='F' && left_ankle_2(i)>1.28) || (sub.gender=='M'&&BMI>21 && left_ankle_2(i)>0.65)
-            %on est sur d'etre sur du plat ou descente
-            ankleIsNot2=true;
-        else
-            % sinon on n'a pas de nouvelles infos
-            compteur_ankle = 0;
-        end
-    elseif std(left_ankle_2(i-150:i))*BMI- std(left_ankle_2(1:150))*BMI > 2.1
-        %         if answerFinale(i-1) == 2 && compteur <100 %ne peut pas redescendre dans la seconde quand il est sur du plat
-        %             compteur_ankle = compteur_ankle+1;
-        %         else
-        %             ankleIs3 = true;
-        %             compteur_ankle = 0;
-        %         end
-        ankleIs3=true;
+%     if i<700 %On suppose que le patient est sur du plat pendant au moins 7 sec
+%         a_ankle=a_ankle+left_ankle(i); % pour pouvoir calculer la valeur moyenne
+%         ankleIsNot2=true; % on est sur du plat
+%         if left_ankle(i)>sommet_plat_ankle_max
+%             sommet_plat_ankle_max = left_ankle(i);
+%         elseif left_ankle(i)<sommet_plat_ankle_min
+%             sommet_plat_ankle_min = left_ankle(i);
+%         end
+%     elseif i==700
+%         a_ankle=(a_ankle+left_ankle(i))/700;%valeur moyenne plat
+%         ankleIsNot2=true;
+%         left_ankle_2 = (left_ankle-a_ankle)/(sommet_plat_ankle_max-sommet_plat_ankle_min);%on normalise la fonction (? faire au fur et ? mesure dans la version finale!!!!!)
+%         figure
+%         plot(left_ankle_2)
+%         title('left ankle-2')
+%     elseif left_ankle_2(i)<left_ankle_2(i-1) && left_ankle_2(i-1)>left_ankle_2(i-4)%si on a un maximum
+%         if (sub.gender=='M' && BMI<21 && left_ankle_2(i)>0.84) || (sub.gender=='F' && left_ankle_2(i)>1.28) || (sub.gender=='M'&&BMI>21 && left_ankle_2(i)>0.65)
+%             %on est sur d'etre sur du plat ou descente
+%             ankleIsNot2=true;
+%         else
+%             % sinon on n'a pas de nouvelles infos
+%             compteur_ankle = 0;
+%         end
+%     elseif std(left_ankle_2(i-150:i))*BMI- std(left_ankle_2(1:150))*BMI > 2.1
+%         %         if answerFinale(i-1) == 2 && compteur <100 %ne peut pas redescendre dans la seconde quand il est sur du plat
+%         %             compteur_ankle = compteur_ankle+1;
+%         %         else
+%         %             ankleIs3 = true;
+%         %             compteur_ankle = 0;
+%         %         end
+%         ankleIs3=true;
+%     end
+%     %else answerl(i) = answerl(i-1);
+% end
+
+%% variables ANKLE %%
+answerAnkle = zeros(1,2);
+maxInstantA = zeros(1,l);
+minInstantA = zeros(1,l);
+compteur2A = 0;
+compteur3A = 0;
+
+%% variables communes %%
+l = length(time_vect);
+answerTous = zeros(1, 4); % vecteur contenant toutes les possibilites pour un instant donne
+answerFinale = zeros(1,l); % vecteur contenant la reponse pour chaque instant
+
+%% Code %%
+
+for i=1:l
+    if i<150  % si on est dans les 149 premieres observations
+        maxInstantA(i) = max(left_ankle(1:149)); % le max de ces observations
+        minInstantA(i) = min(left_ankle(1:149)); % le min de ces observations
+        answerAnkle = 1; % on sait que endeant cet instant la, on est sur du plat
+    else % si on est au dela de ces 150 premieres observations, on ne considere plus qu'on est sur du plat
+        maxInstantA(i) = max(left_ankle(i-149:i)); % on recalcule donc le max
+        minInstantA(i) = min(left_ankle(i-149:i)); % et le min. En fonction de leur valeurs, on avise:
+        
     end
-    %else answerl(i) = answerl(i-1);
+    
     
     %% AnswerFinale
     if ankleIsNot2

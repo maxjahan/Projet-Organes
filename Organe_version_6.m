@@ -36,29 +36,29 @@ for i = 1:l
   %% LEFT HIP %%
   
     if i<150  % si on est dans les 149 premieres observations
-        maxInstant(i) = max(left_hip(1:149)); % le max de ces observation
+        maxInstant(i) = max(left_hip(1:149)); % le max de ces observations
         minInstant(i) = min(left_hip(1:149)); % le min de ces observations
         answerLeft = 1; % on sait que endeant cet instant la, on est sur du plat 
-    else % si on est au dela de ces 150 premieres observation, on ne considere plus qu'on est sur du plat
+    else % si on est au dela de ces 150 premieres observations, on ne considere plus qu'on est sur du plat
         maxInstant(i) = max(left_hip(i-149:i)); % on recalcule donc le max
         minInstant(i) = min(left_hip(i-149:i)); % et le min. En fonction de leur valeurs, on avise:
         if minInstant(i) < minInstant(1) - minInstant(1)*0.1 % si le min est inferieur a celui du plat - un certain pourcentage
             answerLeft = 2; % on sait qu'on monte
-        elseif  maxInstant(i) > maxInstant(1)- maxInstant(1)*0.035 % si le max est au dessus de celui du plat  un certain pourcentage
+        elseif  maxInstant(i) > maxInstant(1)- maxInstant(1)*0.035 % si le max est au dessus de celui du plat + un certain pourcentage
             answerLeft = 1; % on sait qu'on est sur du plat
             compteur3 = 0;
             compteur2 = 0;
         elseif maxInstant(i)-minInstant(i) < (maxInstant(1)-minInstant(1))*0.85 % si la variance est inferieure a un certain pourcentage de la variance du plat
             compteur3 = 0;
             answerLeft = 3; % on sait qu'on descend        
-        % si on entre dans aucune de ces condition, answerLeft garde la
+        % si on entre dans aucune de ces conditions, answerLeft garde la
         % meme valeur qu'a l'iteration precedente.
         end
     end
     
   %% RIGHT HIP %%
   
-    if i<150 % l'algorythme est le meme que pour la hanche gauche. Seules les pourcentages changes 
+    if i<150 % l'algorithme est le meme que pour la hanche gauche. Seules les pourcentages changent 
         maxInstantR(i) = max(right_hip(1:149));
         minInstantR(i) = min(right_hip(1:149));
         answerRight = 1;
@@ -79,7 +79,7 @@ for i = 1:l
     %% Genou Gauche
    
     % Le genou va nous aider a differencier la montee ou la descente du
-    % plat, chose que l'algorythme sur les hanches precedent a parfois du mal a faire
+    % plat, chose que l'algorithme sur les hanches precedent a parfois du mal a faire
     if i>149 
       if left_knee(i)<110 % si la valeur de genou observee est inferieure a 110
             answer_knee = [2 3]; % on peut dire avec certitude qu'on monte OU qu'on descend
@@ -90,16 +90,16 @@ for i = 1:l
   
   %% On assemble tout %%
     
-    if answer_knee(1) ~= 0 % si le genou donne une info utile
-            answerFinale(i) = mode([answerLeft answerRight answer_knee]); % on cherche le mode de nos reponses
-        elseif answerLeft == answerRight % sinon on observe que les haches. Si elles sont egales
-            answerFinale(i) = answerLeft; % alors pas de souci, on est sur de la reponse.
-        else answerFinale(i) = answerFinale(i-1); % sinon, dans le doute, on considere que la situation ne change pas par rapport a l'iteration precedente.
-    end
+  if answer_knee(1) ~= 0 % si le genou donne une info utile
+      answerFinale(i) = mode([answerLeft answerRight answer_knee]); % on cherche le mode de nos reponses
+  elseif answerLeft == answerRight % sinon on observe que les hanches. Si elles sont egales
+      answerFinale(i) = answerLeft; % alors pas de souci, on est sur de la reponse.
+  else answerFinale(i) = answerFinale(i-1); % sinon, dans le doute, on considere que la situation ne change pas par rapport a l'iteration precedente.
+  end
     
 end
 
-%Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de reponses correctes
+Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de reponses correctes
 
 figure
 plot(time_vect, answerFinale, '.-b')
