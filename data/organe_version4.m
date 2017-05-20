@@ -141,6 +141,7 @@ figure
 plot(time_vect,answerFinale, '.-b')
 hold on
 plot(time_vect,true_manoeuvre, '--r')
+
 %figure 
 %plot(right_hip)
 

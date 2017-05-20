@@ -110,3 +110,9 @@ plot(time_vect, maxInstant, '-g', 'markersize', 8 )
 hold on
 plot(time_vect, minInstant,'-r', 'markersize', 8)
 legend('angle hanche gauche','enveloppe supérieure','enveloppe inférieure')
+
+
+answerOfficielle = true_manoeuvre(find(answerFinale ~= 1 ));
+answer = answerFinale(find(answerFinale ~= 1 ));
+  
+Pourcent = ((sum(answer-answerOfficielle==0))/length(answerOfficielle))*100 

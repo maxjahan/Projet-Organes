@@ -16,14 +16,14 @@ answerLeft = 0; % la réponse pour un instant donné en ne regardant que la hanche
 compteur2 = 0;
 compteur3 = 0;
 
+nombreSec = 160; %nombre de seconde pendant lesquel il est impossible qu'une personne descende ou monte après avoir monté/descendu
+
 
 %% variables RIGHT HIP %%
 
 maxInstantR = zeros(1,l); % même principe que pour la hanche gauche
 minInstantR = zeros(1,l);
 answerRight = 0;
-compteur2R = 0;
-compteur3R = 0;
 
 %% variables KNEE %%
 answer_knee = zeros(1,2); % réponse obtenue en regardant uniquement le genou gauche
@@ -43,25 +43,11 @@ for i = 1:l
         maxInstant(i) = max(left_hip(i-149:i)); % on recalcule donc le max
         minInstant(i) = min(left_hip(i-149:i)); % et le min. En fonction de leur valeurs, on avise:
         if minInstant(i) < minInstant(1) - minInstant(1)*0.1 % si le min est inférieur à celui du plat - un certain pourcentage
-            %compteur2 = 0;
-            %if answerLeft == 3 && compteur3 < 100
-            %    compteur3 = compteur3+1;
-            %else
-                answerLeft = 2; % on sait qu'on monte
-            %    compteur3 = 0;
-            %end
+                answerLeft = 2; % on sait qu'on monte   
         elseif  maxInstant(i) > maxInstant(1)- maxInstant(1)*0.035 % si le max est au dessus de celui du plat  un certain pourcentage
             answerLeft = 1; % on sait qu'on est sur du plat
-            compteur3 = 0;
-            compteur2 = 0;
         elseif maxInstant(i)-minInstant(i) < (maxInstant(1)-minInstant(1))*0.85 % si la variance est infériance à un certain pourcentage de la variance du plat
-            compteur3 = 0;
-            %if answerLeft == 2 && compteur2 < 100
-            %    compteur2 = compteur2+1;
-            %else
-                answerLeft = 3; % on sait qu'on descend
-            %    compteur2 = 0;
-            %end            
+                answerLeft = 3; % on sait qu'on descend           
         % si on entre dans aucune de ces condition, answerLeft garde la
         % même valeur qu'à l'itération précédente.
         end
@@ -69,7 +55,7 @@ for i = 1:l
     
   %% RIGHT HIP %%
   
-    if i<150 % l'algorythme est le même que pour la hanche gauche. Seules les pourcentages changes 
+    if i<150 % l'algorithme est le même que pour la hanche gauche. Seules les pourcentages changes 
         maxInstantR(i) = max(right_hip(1:149));
         minInstantR(i) = min(right_hip(1:149));
         answerRight = 1;
@@ -77,24 +63,10 @@ for i = 1:l
         maxInstantR(i) = max(right_hip(i-149:i));
         minInstantR(i) = min(right_hip(i-149:i));
         if minInstantR(i) < minInstantR(1) - minInstantR(1)*0.12
-           % compteur2R = 0;
-           %if answerRight == 3 && compteur3R < 100
-           %     compteur3R = compteur3R+1;
-           %else
                 answerRight = 2; 
-           %     compteur3R = 0;
-           %end
         elseif maxInstantR(i)-minInstantR(i) < (maxInstantR(1)-minInstantR(1))*0.9
-            %compteur3R = 0;
-            %if answerRight == 2 && compteur2R < 100
-                compteur2R = compteur2R+1;
-            else
-                answerRight = 3; 
-                compteur2R = 0;
-            end            
+                answerRight = 3;            
         elseif  maxInstantR(i) > maxInstantR(1)- maxInstantR(1)*0.045
-            compteur3R = 0;
-            compteur2R = 0;
             answerRight = 1;
         end
     end
@@ -113,22 +85,31 @@ for i = 1:l
   
   %% On assemble tout %%
     
-    if answer_knee(1) ~= 0 % si le genou donne une info utile
-            answerFinale(i) = mode([answerLeft answerRight answer_knee]); % on cherche le mode de nos réponses
-        elseif answerLeft == answerRight % sinon on observe que les haches. Si elles sont égales
+   % if answer_knee(1) ~= 0 % si le genou donne une info utile
+   %         answerFinale(i) = mode([answerLeft answerRight answer_knee]); % on cherche le mode de nos réponses
+        if answerLeft == answerRight % sinon on observe que les haches. Si elles sont égales
             answerFinale(i) = answerLeft; % alors pas de souci, on est sur de la réponse.
         else answerFinale(i) = answerFinale(i-1); % sinon, dans le doute, on considère que la situation ne chang pas par rapport à l'itération précédente.
-    end
+        end
+    
+        answerFinale(i) = answerRight;
     
 end
 
-Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100
+
+  
+ set(gca,'FontSize',14)
+  
+  
+Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de réponses correctes
 
 figure
 plot(time_vect, answerFinale, '.-b')
 hold on 
 plot(time_vect, true_manoeuvre, '--r')
-legend('réponse obtenue','réponse donnée')
+xlabel('temps','FontSize',16)
+ylabel('Réponse','FontSize',16)
+legend('\fontsize{16}Réponse obtenue','\fontsize{16}Réponse donnée', 'location', 'northwest')
 
 figure
 plot(time_vect, left_hip, 'ob', 'markersize', 4)
@@ -136,9 +117,14 @@ hold on
 plot(time_vect, maxInstant, '-g', 'markersize', 8 )
 hold on
 plot(time_vect, minInstant,'-r', 'markersize', 8)
-legend('angle hanche gauche','enveloppe supérieure','enveloppe inférieure')
+legend('\fontsize{16}angle hanche gauche','\fontsize{16}enveloppe supérieure','\fontsize{16}enveloppe inférieure', 'location', 'southeast')
 
-compteur3
-compteur2
-compteur3R
-compteur2R
+% compteur3
+% compteur2
+% compteur3R
+% compteur2R
+
+answerOfficielle = true_manoeuvre(find(answerFinale ~= 1 ));
+answer = answerFinale(find(answerFinale ~= 1 ));
+  
+Pourcent = ((sum(answer-answerOfficielle==0))/length(answerOfficielle))*100 

@@ -6,7 +6,6 @@
 %% variables communes %%
 l = length(time_vect);
 answerFinale = zeros(1,l); % vecteur contenant la reponse pour chaque instant
-
 %% variables LEFT HIP %%
 
 maxInstant = zeros(1,l); % valeurs max de left hip entre l'instant donne et les 149 precedents
@@ -33,10 +32,15 @@ a_ankle=0;
 sommet_plat_ankle_max=0;
 sommet_plat_ankle_min=2000;
 compteur_ankle=0;
-
 BMI=(sub.weight)/(sub.height)^2;
-
 answer_ankle = zeros(1,2);
+densityLower_A=zeros(1,l);
+densityUpper_A=zeros(1,l);
+minInstantA = zeros(1,l);
+maxInstantA = zeros(1,l);
+density_diff = zeros(1,l);
+density_diff_mean = zeros(1,l);
+answer_ankle2 = 0;
 
 
 %% Code %%
@@ -137,6 +141,7 @@ for i = 1:l
         end
     end
     
+<<<<<<< Updated upstream
   %% On assemble tout %%
   answerTous = [answerLeft answerRight answer_knee answer_ankle];
   [answerFinale(i), j, k] = mode(answerTous(find(answerTous ~= 0 )));
@@ -144,20 +149,80 @@ for i = 1:l
   if length(modes)  ~= 1
       answerFinale(i) = answerFinale(i-1);
   end 
+=======
+    
+    
+    if i<150
+        maxInstantA(i) = max(left_ankle(1:149));
+        minInstantA(i) = min(left_ankle(1:149));
+        densityLower_A(i) = length(left_ankle(find(left_ankle(1:100)<minInstantA(1)+minInstantA(1)*0.25)));
+        densityUpper_A(i) = length(left_ankle(find(left_ankle(1:100)>minInstantA(1)+minInstantA(1)*0.25)));
+        density_diff(i) = densityLower_A(i)-densityUpper_A(i);
+        density_diff_mean(i) = mean(density_diff(1:100));
+        answer_ankle2 = 1;
+    else
+        maxInstantA(i) = max(left_ankle(i-149:i));
+        minInstantA(i) = min(left_ankle(i-149:i));
+        densityLower_A(i) = length(left_ankle(find(left_ankle(i-100:i)<minInstantA(1)+minInstantA(1)*0.25)));
+        densityUpper_A(i) = length(left_ankle(find(left_ankle(i-100:i)>minInstantA(1)+minInstantA(1)*0.25)));
+        density_diff(i) = densityLower_A(i)-densityUpper_A(i);
+        density_diff_mean(i) = mean(density_diff(i-100:i));
+        if density_diff_mean(i) > 50
+            answer_ankle2 = 2;
+        elseif density_diff_mean(i) < 10 
+            answer_ankle2 = 1;
+        else answer_ankle2 = 3;
+        end
+    end
+  
+  
+  %% On assemble tout %%
+  if answerLeft == answerRight
+      answerFinale(i) = answerLeft;
+  else
+      answerTous = [answerLeft answerRight answer_knee answer_ankle answer_ankle2];
+      [answerFinale(i), ~ , k] = mode(answerTous(find(answerTous ~= 0 )));
+      modes = cell2mat(k);
+      if length(modes)  ~= 1
+          answerFinale(i) = answerFinale(i-1);
+      end
+  end
+  
+>>>>>>> Stashed changes
 end
 
+ set(gca,'FontSize',14)
+ 
 Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de reponses correctes
 
 figure
 plot(time_vect, answerFinale, '.-b')
-hold on 
+hold on
 plot(time_vect, true_manoeuvre, '--r')
-legend('reponse obtenue','reponse donnee')
+legend('reponse obtenue', 'Réponse donnée')
 
 figure
 plot(time_vect, left_hip, 'ob', 'markersize', 4)
 hold on
 plot(time_vect, maxInstant, '-g', 'markersize', 8 )
 hold on
-plot(time_vect, minInstant,'-r', 'markersize', 8)
+plot(time_vect, minInstant,'r', 'markersize', 8)
 legend('angle hanche gauche','enveloppe superieure','enveloppe inferieure')
+
+figure
+plot(time_vect, left_ankle, 'ob', 'markersize', 4)
+hold on
+line([time_vect(1) time_vect(end)],[minInstantA(1)+minInstantA(1)*0.25 minInstantA(1)+minInstantA(1)*0.25],'linewidth',2, 'Color','red')
+legend('angle hanche gauche','enveloppe superieure','enveloppe inferieure', 'limite de densité')
+
+
+figure 
+plot(time_vect, density_diff_mean)
+hold on 
+line([time_vect(1) time_vect(end)],[10  10],'Color','red')
+hold on 
+line([time_vect(1) time_vect(end)],[50 50],'Color','red')
+legend('\fontsize{16}moyenne mobile sur la densité de la cheville','\fontsize{16}limites', 'location', 'southeast')
+
+figure
+plot(time_vect, answer_ankle2)

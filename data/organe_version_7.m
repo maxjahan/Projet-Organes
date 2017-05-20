@@ -84,8 +84,6 @@ for i = 1:l
         elseif maxInstantR(i)-minInstantR(i) < (maxInstantR(1)-minInstantR(1))*0.9
             answerRight = 3;            
         elseif  maxInstantR(i) > maxInstantR(1)- maxInstantR(1)*0.045
-            compteur3R = 0;
-            compteur2R = 0;
             answerRight = 1;
         end
     end
@@ -220,3 +218,4 @@ plot(time_vect, maxInstant, '-g', 'markersize', 8 )
 hold on
 plot(time_vect, minInstant,'-r', 'markersize', 8)
 legend('angle hanche gauche','enveloppe supérieure','enveloppe inférieure')
+title('Données fournies par la hanche gauche du patient 1')

@@ -1,4 +1,6 @@
-  %% LEFT KNEE %%
+  
+
+%% LEFT KNEE %%
   
   l = length(time_vect);
   maxInstant = zeros(1,l);
@@ -49,6 +51,8 @@
 %           end
       end
   end
+  
+  set(gca,'FontSize',14)
 
 
   figure
@@ -56,7 +60,9 @@
   hold on 
   plot(time_vect, maxInstant, 'g')
   hold on
-  plot(time_vect, minInstant, 'g')
+  plot(time_vect, minInstant, 'r')
+  hold on
+  line([time_vect(1) time_vect(l)],[minInstant(1)-minInstant(1)*0.12 minInstant(1)-minInstant(1)*0.12],'Color', 'm')
   hold on
   line([time_vect(1) time_vect(l)],[minInstant(1)-minInstant(1)*0.16 minInstant(1)-minInstant(1)*0.16],'Color', 'k')
   hold on
@@ -64,16 +70,39 @@
   hold on
   line([time_vect(1) time_vect(l)],[maxInstant(1)-maxInstant(1)*0.2 maxInstant(1)-maxInstant(1)*0.2],'Color', 'k')
   hold on
-  line([time_vect(1) time_vect(l)],[minInstant(1)-minInstant(1)*0.12 minInstant(1)-minInstant(1)*0.12],'Color', 'm')
-  hold on
   line([time_vect(1) time_vect(l)],[minInstant(1) minInstant(1)],'Color', 'k')
+  xlabel('temps','FontSize',16)
+  ylabel('angle du genou gauche','FontSize',16)
+  legend('\fontsize{16}angle du genou','\fontsize{16}enveloppe suppérieure','\fontsize{16}enveloppe inférieure','\fontsize{16}limite inférieure','\fontsize{16}délimitation des zones')
+  hold on
+  x = [time_vect(1) time_vect(end) time_vect(end) time_vect(1)];
+  y = [minInstant(1)-minInstant(1)*0.16 minInstant(1)-minInstant(1)*0.16 minInstant(1) minInstant(1)];
+  patch(x,y,'red')
+    hold on
+  x = [time_vect(1) time_vect(end) time_vect(end) time_vect(1)];
+  y = [maxInstant(1)-maxInstant(1)*0.2 maxInstant(1)-maxInstant(1)*0.2 maxInstant(1)-maxInstant(1)*0.12 maxInstant(1)-maxInstant(1)*0.12];
+  patch(x,y,'red')
+  alpha(0.3) 
   
   figure
   plot(time_vect, densityLower)
   hold on
   plot(time_vect, densityUpper)
+  xlabel('temps','FontSize',16)
+  ylabel('densité des observation pour le genou gauche','FontSize',16)
+  legend('\fontsize{16}densité inférieure','\fontsize{16}densité suppérieure')
   
 figure   
-plot(time_vect, verif)
+plot(time_vect, verif, 'b')
+hold on
+plot(time_vect, true_manoeuvre, '--r')
+xlabel('temps','FontSize',16)
+ylabel('Réponse','FontSize',16)
+legend('\fontsize{16}Reponse obtenue','\fontsize{16}Reponse donnée')
+
+answerOfficielle = true_manoeuvre(find(verif ~= 0 ));
+answer = verif(find(verif ~= 0 ));
+
+
   
-  
+Pourcent = ((sum(answer-answerOfficielle==0))/length(answerOfficielle))*100 % pourcentage de reponses correctes
