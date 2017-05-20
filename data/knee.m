@@ -1,0 +1,79 @@
+  %% LEFT KNEE %%
+  
+  l = length(time_vect);
+  maxInstant = zeros(1,l);
+  minInstant = zeros(1,l);
+  densityLower = zeros(1,l);
+  densityUpper = zeros(1,l);
+  %answer = [0 0];
+  verif = zeros(1,l);
+  
+  for i = 1:l
+      if i<150  % si on est dans les 149 premieres observations
+          maxInstant(i) = max(left_knee(1:149)); % le max de ces observation
+          minInstant(i) = min(left_knee(1:149)); % le min de ces observations
+          %answer = [1 0]; % on sait que endant cet instant la, on est sur du plat
+          verif(i) = 1;
+          densityLower(i) = sum(left_knee(find(left_knee(1:149)>minInstant(1)-minInstant(1)*0.16)))- sum(left_knee(find(left_knee(1:149)>minInstant(1))));
+          densityUpper(i) = sum(left_knee(find(left_knee(1:149)>maxInstant(1)-maxInstant(1)*0.2)))- sum(left_knee(find(left_knee(1:149)>maxInstant(1)-maxInstant(1)*0.12)));
+      else % si on est au dela de ces 150 premieres observation, on ne concidere plus qu'on est sur du plat
+          maxInstant(i) = max(left_knee(i-149:i)); % on recalcule donc le max
+          minInstant(i) = min(left_knee(i-149:i)); % et le min. En fonction de leur valeurs, on avise:
+          densityLower(i) = sum(left_knee(find(left_knee(i-149:i)>minInstant(1)-minInstant(1)*0.16)))- sum(left_knee(find(left_knee(i-149:i)>minInstant(1))));
+          densityUpper(i) = sum(left_knee(find(left_knee(i-149:i)>maxInstant(1)-maxInstant(1)*0.2)))- sum(left_knee(find(left_knee(i-149:i)>maxInstant(1)-maxInstant(1)*0.12)));
+          if minInstant(i) < minInstant(1)-minInstant(1)*0.12
+               if densityLower(i) > densityUpper(i)
+                  % answer = [2 0];
+                  verif(i) = 2;
+               elseif densityUpper(i) > densityLower(i)
+                  % answer = [3 0];
+                  verif(i) = 3;
+               else %answer = [2 3];  
+                   verif(i) = 4;
+               end
+          else %answer = [0 0]
+              verif(i) = 0;
+          end
+          
+          %           if minInstant(i) < minInstant(1) - minInstant(1)*0.1 % si le min est inferieur a celui du plat - un certain pourcentage
+%               answerLeft = 2; % on sait qu'on monte
+%           elseif  maxInstant(i) > maxInstant(1)- maxInstant(1)*0.035 % si le max est au dessus de celui du plat  un certain pourcentage
+%               answerLeft = 1; % on sait qu'on est sur du plat
+%               compteur3 = 0;
+%               compteur2 = 0;
+%           elseif maxInstant(i)-minInstant(i) < (maxInstant(1)-minInstant(1))*0.85 % si la variance est inferiance a un certain pourcentage de la variance du plat
+%               compteur3 = 0;
+%               answerLeft = 3; % on sait qu'on descend
+%               % si on entre dans aucune de ces condition, answerLeft garde la
+%               % meme valeur qu'a l'iteration precedente.
+%           end
+      end
+  end
+
+
+  figure
+  plot(time_vect, left_knee, 'ob', 'markersize', 4)
+  hold on 
+  plot(time_vect, maxInstant, 'g')
+  hold on
+  plot(time_vect, minInstant, 'g')
+  hold on
+  line([time_vect(1) time_vect(l)],[minInstant(1)-minInstant(1)*0.16 minInstant(1)-minInstant(1)*0.16],'Color', 'k')
+  hold on
+  line([time_vect(1) time_vect(l)],[maxInstant(1)-maxInstant(1)*0.12 maxInstant(1)-maxInstant(1)*0.12],'Color', 'k')
+  hold on
+  line([time_vect(1) time_vect(l)],[maxInstant(1)-maxInstant(1)*0.2 maxInstant(1)-maxInstant(1)*0.2],'Color', 'k')
+  hold on
+  line([time_vect(1) time_vect(l)],[minInstant(1)-minInstant(1)*0.12 minInstant(1)-minInstant(1)*0.12],'Color', 'm')
+  hold on
+  line([time_vect(1) time_vect(l)],[minInstant(1) minInstant(1)],'Color', 'k')
+  
+  figure
+  plot(time_vect, densityLower)
+  hold on
+  plot(time_vect, densityUpper)
+  
+figure   
+plot(time_vect, verif)
+  
+  

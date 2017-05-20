@@ -95,13 +95,13 @@ for i = 1:l
     
 end
 
-%Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de réponses correctes
+Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de réponses correctes
 
 figure
 plot(time_vect, answerFinale, '.-b')
 hold on 
-%plot(time_vect, true_manoeuvre, '--r')
-%legend('réponse obtenue','réponse donnée')
+plot(time_vect, true_manoeuvre, '--r')
+legend('réponse obtenue','réponse donnée')
 
 figure
 plot(time_vect, left_hip, 'ob', 'markersize', 4)
