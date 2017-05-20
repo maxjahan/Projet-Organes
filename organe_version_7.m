@@ -135,17 +135,8 @@ for i = 1:l
         else
             compteur_ankle = 0; %sinon on n'a pas de nouvelles infos
         end
-    elseif std(left_ankle_2(i-150:i))*BMI- std(left_ankle_2(1:150))*BMI > 6.5
-        if answerFinale(i-1) == 2 && compteur_ankle <100 %ne peut pas redescendre dans la seconde quand il est sur du plat
-            compteur_ankle = compteur_ankle+1;
-        else
-            answer_ankle = [3 0];
-            compteur_ankle = 0;
-        end
     end
-  
-  
-  
+    
   %% On assemble tout %%
   answerTous = [answerLeft answerRight answer_knee answer_ankle];
   [answerFinale(i), j, k] = mode(answerTous(find(answerTous ~= 0 )));

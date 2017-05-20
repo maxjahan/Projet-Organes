@@ -1,22 +1,22 @@
 close all
 
-% a_ankle=0;
+a_ankle=0;
 % b_ankle=0;
 % c_ankle=0;
 % compteur_ankle=0;
-% sommet_plat_ankle=0;
+sommet_plat_ankle=0;
 % moyenne_sommet_plat_ankle=0;
 % minima_plat_ankle=0;
 % moyenne_minima_plat_ankle=0;
 % ankleIsNot2 = false;
 % ankleIs3 = false;
 % 
-% sommet_plat_ankle_max=0;
-% sommet_plat_ankle_min=2000;
+sommet_plat_ankle_max=0;
+sommet_plat_ankle_min=2000;
 % 
-% BMI=(sub.weight)/(sub.height)^2;
+BMI=(sub.weight)/(sub.height)^2;
 % l = length(time_vect);
-% answerFinale = zeros(1,l);
+answerFinale = zeros(1,l);
 
 
 
@@ -112,8 +112,8 @@ close all
 % end
 %% variables communes %%
 l = length(time_vect);
-answerTous = zeros(1, 4); % vecteur contenant toutes les possibilites pour un instant donne
-answerFinale = zeros(1,l); % vecteur contenant la reponse pour chaque instant
+answerFinale1 = zeros(1,l); % vecteur contenant la reponse pour chaque instant
+answerFinale2 = zeros(1,l);
 
 %% variables ANKLE %%
 answerAnkle = zeros(1,2);
@@ -137,7 +137,7 @@ for i=1:l
         end
     elseif i==150
         a_ankle=(a_ankle+left_ankle(i))/150;%valeur moyenne plat
-        answer_ankle = [1 3];
+        answer_ankle = [1 0];
         left_ankle_2 = (left_ankle-a_ankle)/(sommet_plat_ankle_max-sommet_plat_ankle_min);%on normalise la fonction
         
     elseif left_ankle_2(i)<left_ankle_2(i-1) && left_ankle_2(i-1)>left_ankle_2(i-2)%si on a un maximum
@@ -146,47 +146,20 @@ for i=1:l
         else
             compteur_ankle = 0; %sinon on n'a pas de nouvelles infos
         end
-    elseif std(left_ankle_2(i-150:i))*BMI- std(left_ankle_2(1:150))*BMI > 4.4
-        if answerFinale(i-1) == 2 && compteur_ankle <100 %ne peut pas redescendre dans la seconde quand il est sur du plat
-            compteur_ankle = compteur_ankle+1;
-        else
-            answer_ankle = [3 0];
-            compteur_ankle = 0;
-        end
     end
-    
     
     %% AnswerFinale
-    if answer_ankle = [3 0]
-        answerFinale1(i) = 3; %on rajoute 1 et 3 dans les propositions
-    elseif 
-    else
-        answerFinale1(i)= 0;
+    if answer_ankle == [1 3]
+        answerFinale2(i)= 1;
     end
-    ankleIsNot2=false;
-    if ankleIs3
-        answerFinale2(i) = 3; %on rajoute 1 et 3 dans les propositions
-    else
-        answerFinale2(i)= 0;
-    end
-    ankleIs3=false;
 end
-
-figure
-plot(time_vect,answerFinale1, '.-b')
-hold on
-plot(time_vect,true_manoeuvre, '--r')
-legend('ankleIsNot2','Reponse');
 
 figure
 plot(time_vect,answerFinale2, '.-b')
 hold on
 plot(time_vect,true_manoeuvre, '--r')
-legend('ankleIs3','Reponse');
+legend('AnkleIsNot2','Donnee');
 
-% figure;
-% plot(time_vect,left_hip);
-% 
 % q = 150;
 % l = length(time_vect);
 % movingSTD = zeros(1, l-q);
@@ -196,6 +169,7 @@ legend('ankleIs3','Reponse');
 % figure
 % plot(time_vect(151:end),movingSTD-movingSTD(1))
 % hold on
+% plot(time_vect,true_manoeuvre, '--r')
 % %line([1 l-q],[15 15],'Color','red')
 % grid on
 % title('standard dev')
