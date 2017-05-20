@@ -38,9 +38,6 @@ compteur_ankle=0;
 
 BMI=(sub.weight)/(sub.height)^2;
 
-AnkleIsNot2=zeros(l);
-AnkleIs3=zeros(l);
-
 %% Code %%
 
 for i = 1:l
@@ -113,7 +110,6 @@ for i = 1:l
     elseif left_ankle_2(i)<left_ankle_2(i-1) && left_ankle_2(i-1)>left_ankle_2(i-2)%si on a un maximum
         if (sub.gender=='M' && BMI<21 && left_ankle_2(i)>0.84) || (sub.gender=='F' && left_ankle_2(i)>1.28) || (sub.gender=='M'&& BMI>21 && left_ankle_2(i)>0.75)
             ankleIsNot2=true; %on est sur d'etre sur du plat ou descente
-            AnkleIsNot2(i)=1;
         else
             compteur_ankle = 0; %sinon on n'a pas de nouvelles infos
         end
@@ -122,7 +118,6 @@ for i = 1:l
             compteur_ankle = compteur_ankle+1;
         else
             ankleIs3 = true;
-            AnkleIs3(i)=3;
             compteur_ankle = 0;
         end
     end
@@ -147,13 +142,6 @@ for i = 1:l
 end
 
 Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de reponses correctes
-
-figure
-plot(time_vect,AnkleIs3,'.b')
-hold on 
-plot(time_vect,AnkleIsNot2,'ob')
-% hold on
-% plot(time_vect, true_manoeuvre, '--r')
 
 figure
 plot(time_vect, answerFinale, '.-b')
