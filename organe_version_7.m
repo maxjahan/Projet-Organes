@@ -153,47 +153,7 @@ for i = 1:l
   modes = cell2mat(k);
   if length(modes)  ~= 1
       answerFinale(i) = answerFinale(i-1);
-  end
-    
-%     if answer_knee(1) ~= 0 % si le genou donne une info utile
-%         if answer_knee(2) == 0
-%             [answerFinale(i), j, k] = mode([answerLeft answerRight answer_knee(1)]);
-%              modes = cell2mat(k);
-%             if length(modes)  ~= 1
-%                 answerFinale(i) = answerFinale(i-1);
-%             end
-%         else
-%             answerFinale(i) = mode([answerLeft answerRight answer_knee]); % on cherche le mode de nos r?ponses
-%         end
-%     elseif answerLeft == answerRight % sinon on observe que les haches. Si elles sont ?gales
-%             answerFinale(i) = answerLeft; % alors pas de souci, on est sur de la r?ponse.
-%     else  answerFinale(i) = answerFinale(i-1); % sinon, dans le doute, on consid?re que la situation ne chang pas par rapport ? l'it?ration pr?c?dente.
-%     end
-%     
-%     
-%     
-%       Suggestions=[answerLeft answerRight];
-%   if ankleIs3 % si on sait avec certitude qu'on descend
-%       Suggestions= [Suggestions 3];
-%   end
-%   if ankleIsNot2 % si on sait avec certitude qu'on ne monte pas
-%       Suggestions= [Suggestions 1 3];
-%   end
-%   if answer_knee(1) ~= 0 % si le genou donne une info utile
-%       Suggestions= [Suggestions answer_knee]; % on rajoute l'info du genou
-%       answerFinale(i)= mode(Suggestions);
-%   elseif answerLeft == answerRight % sinon on observe que les hanches. Si elles sont egales
-%       answerFinale(i) = answerLeft; % alors pas de souci, on est sur de la reponse.
-%   else answerFinale(i) = answerFinale(i-1); % sinon, dans le doute, on considere que la situation ne change pas par rapport a l'iteration precedente.
-%   end
-    
-%     if time_vect(i) == 138.9
-%         answerLeft
-%         answerRight
-%         answer_knee
-%         answerFinale(i)
-%     end
-    
+  end 
 end
 
 Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de reponses correctes
@@ -202,7 +162,7 @@ figure
 plot(time_vect, answerFinale, '.-b')
 hold on 
 plot(time_vect, true_manoeuvre, '--r')
-legend('r?ponse obtenue','r?ponse donn?e')
+legend('reponse obtenue','reponse donnee')
 
 figure
 plot(time_vect, left_hip, 'ob', 'markersize', 4)
@@ -210,4 +170,4 @@ hold on
 plot(time_vect, maxInstant, '-g', 'markersize', 8 )
 hold on
 plot(time_vect, minInstant,'-r', 'markersize', 8)
-legend('angle hanche gauche','enveloppe sup?rieure','enveloppe inf?rieure')
+legend('angle hanche gauche','enveloppe superieure','enveloppe inferieure')
