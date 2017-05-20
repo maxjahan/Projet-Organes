@@ -27,16 +27,13 @@ answer_knee = zeros(1,2); % reponse obtenue en regardant uniquement le genou gau
 %% variables ANKLE %%
 ankleIs3=false; %variable qui certifie qu'on est dans une mont?e
 ankleIsNot2=false; %variable qui certifie qu'on est pas dans une descente
-
 a_ankle=0;
-ankleIsNot2 = false;
-ankleIs3 = false;
-
 sommet_plat_ankle_max=0;
 sommet_plat_ankle_min=2000;
 compteur_ankle=0;
-
 BMI=(sub.weight)/(sub.height)^2;
+answer_ankle = zeros(1,2);
+
 
 %% Code %%
 
@@ -96,6 +93,7 @@ for i = 1:l
         a_ankle=a_ankle+left_ankle(i); % pour pouvoir calculer la valeur moyenne
         ankleIsNot2=true; % on est sur du plat
         AnkleIsNot2(i)=1;
+        answer_ankle = [1 0];
         if left_ankle(i)>sommet_plat_ankle_max
             sommet_plat_ankle_max = left_ankle(i);
         elseif left_ankle(i)<sommet_plat_ankle_min
@@ -104,12 +102,14 @@ for i = 1:l
     elseif i==150
         a_ankle=(a_ankle+left_ankle(i))/150;%valeur moyenne plat
         ankleIsNot2=true;
+        answer_ankle = [1 3];
         AnkleIsNot2(i)=1;
         left_ankle_2 = (left_ankle-a_ankle)/(sommet_plat_ankle_max-sommet_plat_ankle_min);%on normalise la fonction
         
     elseif left_ankle_2(i)<left_ankle_2(i-1) && left_ankle_2(i-1)>left_ankle_2(i-2)%si on a un maximum
         if (sub.gender=='M' && BMI<21 && left_ankle_2(i)>0.84) || (sub.gender=='F' && left_ankle_2(i)>1.28) || (sub.gender=='M'&& BMI>21 && left_ankle_2(i)>0.75)
             ankleIsNot2=true; %on est sur d'etre sur du plat ou descente
+            answer_ankle = [1 3];
         else
             compteur_ankle = 0; %sinon on n'a pas de nouvelles infos
         end
@@ -119,6 +119,7 @@ for i = 1:l
         else
             ankleIs3 = true;
             compteur_ankle = 0;
+            answer_ankle = [3 0];
         end
     end
     
