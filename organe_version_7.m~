@@ -49,7 +49,7 @@ for i = 1:l
         maxInstant(i) = max(left_hip(1:149)); % le max de ces observation
         minInstant(i) = min(left_hip(1:149)); % le min de ces observations
         answerLeft = 1; % on sait que endant cet instant le, on est sur du plat 
-    else % si on est au dela de ces 150 premieres observation, on ne concidere plus qu'on est sur du plat
+    else % si on est au del? de ces 150 premieres observation, on ne concidere plus qu'on est sur du plat
         maxInstant(i) = max(left_hip(i-149:i)); % on recalcule donc le max
         minInstant(i) = min(left_hip(i-149:i)); % et le min. En fonction de leur valeurs, on avise:
         if minInstant(i) < minInstant(1) - minInstant(1)*0.1 % si le min est inferieur a celui du plat - un certain pourcentage
@@ -58,7 +58,7 @@ for i = 1:l
             answerLeft = 1; % on sait qu'on est sur du plat
             compteur3 = 0;
             compteur2 = 0;
-        elseif maxInstant(i)-minInstant(i) < (maxInstant(1)-minInstant(1))*0.85 % si la variance est inferiance a un certain pourcentage de la variance du plat
+        elseif maxInstant(i)-minInstant(i) < (maxInstant(1)-minInstant(1))*0.85 % si la variance est inferiance ? un certain pourcentage de la variance du plat
             compteur3 = 0;
             answerLeft = 3; % on sait qu'on descend        
         % si on entre dans aucune de ces condition, answerLeft garde la
@@ -196,7 +196,7 @@ for i = 1:l
     
 end
 
-Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de reponses correctes
+Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de r?ponses correctes
 
 figure
 plot(time_vect, answerFinale, '.-b')

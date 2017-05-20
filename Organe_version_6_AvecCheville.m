@@ -103,7 +103,6 @@ for i = 1:l
         a_ankle=(a_ankle+left_ankle(i))/150;%valeur moyenne plat
         ankleIsNot2=true;
         answer_ankle = [1 3];
-        AnkleIsNot2(i)=1;
         left_ankle_2 = (left_ankle-a_ankle)/(sommet_plat_ankle_max-sommet_plat_ankle_min);%on normalise la fonction
         
     elseif left_ankle_2(i)<left_ankle_2(i-1) && left_ankle_2(i-1)>left_ankle_2(i-2)%si on a un maximum
