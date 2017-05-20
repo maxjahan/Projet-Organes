@@ -126,7 +126,7 @@ compteur3A = 0;
 %% Code %%
 
 for i=1:l
-    if i<150 %On suppose que le patient est sur du plat pendant au moins 1,5 sec
+   if i<150 %On suppose que le patient est sur du plat pendant au moins 1,5 sec
         a_ankle=a_ankle+left_ankle(i); % pour pouvoir calculer la valeur moyenne
         ankleIsNot2=true; % on est sur du plat
         answer_ankle = [1 0];
@@ -158,8 +158,7 @@ for i=1:l
     
     %% AnswerFinale
     if answer_ankle = [3 0]
-        answerFinale1(i) = 3; %on rajoute 1 et 3 dans les propositions
-    elseif 
+        answerFinale1(i) = 1; %on rajoute 1 et 3 dans les propositions
     else
         answerFinale1(i)= 0;
     end

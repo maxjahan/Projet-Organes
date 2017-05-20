@@ -97,7 +97,7 @@ for i = 1:l
           answer_knee = [1 0]; % on sait que endant cet instant la, on est sur du plat
           densityLower(i) = sum(left_knee(find(left_knee(1:149)>minInstantK(1)-minInstantK(1)*0.16)))- sum(left_knee(find(left_knee(1:149)>minInstantK(1))));
           densityUpper(i) = sum(left_knee(find(left_knee(1:149)>maxInstantK(1)-maxInstantK(1)*0.2)))- sum(left_knee(find(left_knee(1:149)>maxInstantK(1)-maxInstantK(1)*0.12)));
-      else % si on est au dela de ces 150 premieres observation, on ne concidere plus qu'on est sur du plat
+      else % si on est au dela de ces 150 premieres observation, on ne considere plus qu'on est sur du plat
           maxInstantK(i) = max(left_knee(i-149:i)); % on recalcule donc le max
           minInstantK(i) = min(left_knee(i-149:i)); % et le min. En fonction de leur valeurs, on avise:
           densityLower(i) = sum(left_knee(find(left_knee(i-149:i)>minInstantK(1)-minInstantK(1)*0.16)))- sum(left_knee(find(left_knee(i-149:i)>minInstantK(1))));
@@ -119,7 +119,6 @@ for i = 1:l
         a_ankle=a_ankle+left_ankle(i); % pour pouvoir calculer la valeur moyenne
         ankleIsNot2=true; % on est sur du plat
         answer_ankle = [1 0];
-        %AnkleIsNot2(i)=1;
         if left_ankle(i)>sommet_plat_ankle_max
             sommet_plat_ankle_max = left_ankle(i);
         elseif left_ankle(i)<sommet_plat_ankle_min
@@ -127,7 +126,7 @@ for i = 1:l
         end
     elseif i==150
         a_ankle=(a_ankle+left_ankle(i))/150;%valeur moyenne plat
-        answer_ankle = [1 3];
+        answer_ankle = [1 0];
         left_ankle_2 = (left_ankle-a_ankle)/(sommet_plat_ankle_max-sommet_plat_ankle_min);%on normalise la fonction
         
     elseif left_ankle_2(i)<left_ankle_2(i-1) && left_ankle_2(i-1)>left_ankle_2(i-2)%si on a un maximum
@@ -136,7 +135,7 @@ for i = 1:l
         else
             compteur_ankle = 0; %sinon on n'a pas de nouvelles infos
         end
-    elseif std(left_ankle_2(i-150:i))*BMI- std(left_ankle_2(1:150))*BMI > 4.4
+    elseif std(left_ankle_2(i-150:i))*BMI- std(left_ankle_2(1:150))*BMI > 6.5
         if answerFinale(i-1) == 2 && compteur_ankle <100 %ne peut pas redescendre dans la seconde quand il est sur du plat
             compteur_ankle = compteur_ankle+1;
         else
@@ -148,7 +147,7 @@ for i = 1:l
   
   
   %% On assemble tout %%
-  answerTous = [answerLeft answerRight answer_knee];
+  answerTous = [answerLeft answerRight answer_knee answer_ankle];
   [answerFinale(i), j, k] = mode(answerTous(find(answerTous ~= 0 )));
   modes = cell2mat(k);
   if length(modes)  ~= 1
