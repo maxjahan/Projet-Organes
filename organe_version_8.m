@@ -28,10 +28,8 @@ densityUpper = zeros(1,l);
 
 %% variables ANKLE %%
 a_ankle=0;
-
 sommet_plat_ankle_max=0;
 sommet_plat_ankle_min=2000;
-compteur_ankle=0;
 BMI=(sub.weight)/(sub.height)^2;
 answer_ankle = zeros(1,2);
 densityLower_A=zeros(1,l);
@@ -57,19 +55,16 @@ for i = 1:l
         %   plus qu'on est sur du plat
         maxInstant(i) = max(left_hip(i-149:i)); % on recalcule donc le max
         minInstant(i) = min(left_hip(i-149:i)); % et le min. En fonction de leur valeurs, on avise:
-                                                              
-        if minInstant(i) < minInstant(1) - minInstant(1)*0.1  %si le min est inferieur a celui du plat - un certain pourcentage alors on sait qu'on monte                                 
-            answerLeft = 2;                                   
+        
+        if minInstant(i) < minInstant(1) - minInstant(1)*0.1  %si le min est inferieur a celui du plat - un certain pourcentage alors on sait qu'on monte
+            answerLeft = 2;
         elseif  maxInstant(i) > maxInstant(1)- maxInstant(1)*0.03 % si le max est au dessus de celui du plat  un certain pourcentage
             answerLeft = 1; % on sait qu'on est sur du plat
-            compteur3 = 0;
-            compteur2 = 0;
         elseif maxInstant(i)-minInstant(i) < (maxInstant(1)-minInstant(1))*0.85
-            % si la variance est inferieure a un certain pourcentage de la variance du plat                                                     
-            compteur3 = 0;
+            % si la variance est inferieure a un certain pourcentage de la variance du plat
             answerLeft = 3; % on sait qu'on descend
             % si on entre dans aucune de ces condition, answerLeft garde la meme valeur qu'a l'iteration precedente.
-          
+            
         end
     end
     
@@ -87,8 +82,6 @@ for i = 1:l
         elseif maxInstantR(i)-minInstantR(i) < (maxInstantR(1)-minInstantR(1))*0.9
             answerRight = 3;
         elseif  maxInstantR(i) > maxInstantR(1)- maxInstantR(1)*0.045
-            compteur3R = 0;
-            compteur2R = 0;
             answerRight = 1;
         end
     end
@@ -135,12 +128,7 @@ for i = 1:l
         left_ankle_2 = (left_ankle-a_ankle)/(sommet_plat_ankle_max-sommet_plat_ankle_min);%on normalise la fonction
         
     elseif std(left_ankle_2(i-150:i))*BMI- std(left_ankle_2(1:150))*BMI > 4.4
-        if answerFinale(i-1) == 2 && compteur_ankle <100 % on ne peut pas redescendre dans la seconde après qu'il soit sur du plat
-            compteur_ankle = compteur_ankle+1;
-        else
-            answer_ankle = [3 0];
-            compteur_ankle = 0;
-        end
+        answer_ankle = [3 0];  
     end
     
     if i<150      % si on est dans les 149 premieres observations
@@ -185,7 +173,7 @@ end
 Pourcent =((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100;
 %pourcentage de reponses correctes, a mettre en commentaire si on ne dispose pas la reponse donnee
 
-% Representation de la solution 
+% Representation de la solution
 figure
 plot(time_vect, answerFinale, '.-b')
 hold on
