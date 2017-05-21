@@ -1,6 +1,6 @@
 %% Hypotheses %%
 % - On suppose que la personne demarre sur de plat et qu'elle y reste
-% pendant au moins 150 observations, ce qui correspond a 1,5 sec. 
+% pendant au moins 150 observations, ce qui correspond a 1,5 sec.
 
 
 %% variables communes %%
@@ -21,7 +21,7 @@ answerRight = 0;
 
 %% variables KNEE %%
 answer_knee = zeros(1,2); % reponse obtenue en regardant uniquement le genou gauche
-maxInstantK = zeros(1,l); 
+maxInstantK = zeros(1,l);
 minInstantK = zeros(1,l);
 densityLower = zeros(1,l);
 densityUpper = zeros(1,l);
@@ -47,16 +47,18 @@ answer_ankle2 = 0;
 
 for i = 1:l
     
-  %% LEFT HIP %%
-  
+    %% LEFT HIP %%
+    
     if i<150  % si on est dans les 149 premieres observations
         maxInstant(i) = max(left_hip(1:149)); % le max de ces observation
         minInstant(i) = min(left_hip(1:149)); % le min de ces observations
-        answerLeft = 1; % on sait que endant cet instant le, on est sur du plat 
-    else % si on est au dela de ces 150 premieres observation, on ne concidere plus qu'on est sur du plat
+        answerLeft = 1; % on sait que endant cet instant le, on est sur du plat
+    else % si on est au dela de ces 150 premieres observation, on ne considere
+        %plus qu'on est sur du plat
         maxInstant(i) = max(left_hip(i-149:i)); % on recalcule donc le max
         minInstant(i) = min(left_hip(i-149:i)); % et le min. En fonction de leur valeurs, on avise:
-        if minInstant(i) < minInstant(1) - minInstant(1)*0.1 % si le min est inferieur a celui du plat - un certain pourcentage
+        if minInstant(i) < minInstant(1) - minInstant(1)*0.1 % si le min est inferieur a celui
+            %du plat - un certain pourcentage
             answerLeft = 2; % on sait qu'on monte
         elseif  maxInstant(i) > maxInstant(1)- maxInstant(1)*0.03 % si le max est au dessus de celui du plat  un certain pourcentage
             answerLeft = 1; % on sait qu'on est sur du plat
@@ -64,15 +66,15 @@ for i = 1:l
             compteur2 = 0;
         elseif maxInstant(i)-minInstant(i) < (maxInstant(1)-minInstant(1))*0.85 % si la variance est inferiance a un certain pourcentage de la variance du plat
             compteur3 = 0;
-            answerLeft = 3; % on sait qu'on descend        
-        % si on entre dans aucune de ces condition, answerLeft garde la
-        % meme valeur qu'a l'iteration precedente.
+            answerLeft = 3; % on sait qu'on descend
+            % si on entre dans aucune de ces condition, answerLeft garde la
+            % meme valeur qu'a l'iteration precedente.
         end
     end
     
-  %% RIGHT HIP %%
-  
-    if i<150 % l'algorythme est le meme que pour la hanche gauche. Seules les pourcentages changes 
+    %% RIGHT HIP %%
+    
+    if i<150 % l'algorythme est le meme que pour la hanche gauche. Seules les pourcentages changes
         maxInstantR(i) = max(right_hip(1:149));
         minInstantR(i) = min(right_hip(1:149));
         answerRight = 1;
@@ -80,9 +82,9 @@ for i = 1:l
         maxInstantR(i) = max(right_hip(i-149:i));
         minInstantR(i) = min(right_hip(i-149:i));
         if minInstantR(i) < minInstantR(1) - minInstantR(1)*0.12
-            answerRight = 2; 
+            answerRight = 2;
         elseif maxInstantR(i)-minInstantR(i) < (maxInstantR(1)-minInstantR(1))*0.9
-            answerRight = 3;            
+            answerRight = 3;
         elseif  maxInstantR(i) > maxInstantR(1)- maxInstantR(1)*0.045
             compteur3R = 0;
             compteur2R = 0;
@@ -91,34 +93,34 @@ for i = 1:l
     end
     
     %% Genou Gauche
-   
+    
     %Le genou va nous aider a differencier la montee ou la descente du
     %plat
-  
-      if i<150  % si on est dans les 149 premieres observations
-          maxInstantK(i) = max(left_knee(1:149)); % le max de ces observation
-          minInstantK(i) = min(left_knee(1:149)); % le min de ces observations
-          answer_knee = [1 0]; % on sait que endant cet instant la, on est sur du plat
-          densityLower(i) = sum(left_knee(find(left_knee(1:149)>minInstantK(1)-minInstantK(1)*0.16)))- sum(left_knee(find(left_knee(1:149)>minInstantK(1))));
-          densityUpper(i) = sum(left_knee(find(left_knee(1:149)>maxInstantK(1)-maxInstantK(1)*0.2)))- sum(left_knee(find(left_knee(1:149)>maxInstantK(1)-maxInstantK(1)*0.12)));
-      else % si on est au dela de ces 150 premieres observation, on ne considere plus qu'on est sur du plat
-          maxInstantK(i) = max(left_knee(i-149:i)); % on recalcule donc le max
-          minInstantK(i) = min(left_knee(i-149:i)); % et le min. En fonction de leur valeurs, on avise:
-          densityLower(i) = sum(left_knee(find(left_knee(i-149:i)>minInstantK(1)-minInstantK(1)*0.16)))- sum(left_knee(find(left_knee(i-149:i)>minInstantK(1))));
-          densityUpper(i) = sum(left_knee(find(left_knee(i-149:i)>maxInstantK(1)-maxInstantK(1)*0.2)))- sum(left_knee(find(left_knee(i-149:i)>maxInstantK(1)-maxInstantK(1)*0.12)));
-          if minInstantK(i) < minInstantK(1)-minInstantK(1)*0.12
-               if densityLower(i) > densityUpper(i)
-                  answer_knee = [2 0];
-               elseif densityUpper(i) > densityLower(i)
-                  answer_knee = [3 0];
-               else answer_knee = [2 3];  
-               end
-          else answer_knee = [0 0];
-          end
-      end
-      
-      
-        %% Cheville gauche
+    
+    if i<150  % si on est dans les 149 premieres observations
+        maxInstantK(i) = max(left_knee(1:149)); % le max de ces observation
+        minInstantK(i) = min(left_knee(1:149)); % le min de ces observations
+        answer_knee = [1 0]; % on sait que endant cet instant la, on est sur du plat
+        densityLower(i) = sum(left_knee(find(left_knee(1:149)>minInstantK(1)-minInstantK(1)*0.16)))- sum(left_knee(find(left_knee(1:149)>minInstantK(1))));
+        densityUpper(i) = sum(left_knee(find(left_knee(1:149)>maxInstantK(1)-maxInstantK(1)*0.2)))- sum(left_knee(find(left_knee(1:149)>maxInstantK(1)-maxInstantK(1)*0.12)));
+    else % si on est au dela de ces 150 premieres observation, on ne considere plus qu'on est sur du plat
+        maxInstantK(i) = max(left_knee(i-149:i)); % on recalcule donc le max
+        minInstantK(i) = min(left_knee(i-149:i)); % et le min. En fonction de leur valeurs, on avise:
+        densityLower(i) = sum(left_knee(find(left_knee(i-149:i)>minInstantK(1)-minInstantK(1)*0.16)))- sum(left_knee(find(left_knee(i-149:i)>minInstantK(1))));
+        densityUpper(i) = sum(left_knee(find(left_knee(i-149:i)>maxInstantK(1)-maxInstantK(1)*0.2)))- sum(left_knee(find(left_knee(i-149:i)>maxInstantK(1)-maxInstantK(1)*0.12)));
+        if minInstantK(i) < minInstantK(1)-minInstantK(1)*0.12
+            if densityLower(i) > densityUpper(i)
+                answer_knee = [2 0];
+            elseif densityUpper(i) > densityLower(i)
+                answer_knee = [3 0];
+            else answer_knee = [2 3];
+            end
+        else answer_knee = [0 0];
+        end
+    end
+    
+    
+    %% Cheville gauche
     if i<150 %On suppose que le patient est sur du plat pendant au moins 1,5 sec
         a_ankle=a_ankle+left_ankle(i); % pour pouvoir calculer la valeur moyenne
         ankleIsNot2=true; % on est sur du plat
@@ -141,15 +143,15 @@ for i = 1:l
         end
     end
     
-<<<<<<< Updated upstream
-  %% On assemble tout %%
-  answerTous = [answerLeft answerRight answer_knee answer_ankle];
-  [answerFinale(i), j, k] = mode(answerTous(find(answerTous ~= 0 )));
-  modes = cell2mat(k);
-  if length(modes)  ~= 1
-      answerFinale(i) = answerFinale(i-1);
-  end 
-=======
+    
+    %% On assemble tout %%
+    answerTous = [answerLeft answerRight answer_knee answer_ankle];
+    [answerFinale(i), j, k] = mode(answerTous(find(answerTous ~= 0 )));
+    modes = cell2mat(k);
+    if length(modes)  ~= 1
+        answerFinale(i) = answerFinale(i-1);
+    end
+    
     
     
     if i<150
@@ -169,30 +171,30 @@ for i = 1:l
         density_diff_mean(i) = mean(density_diff(i-100:i));
         if density_diff_mean(i) > 50
             answer_ankle2 = 2;
-        elseif density_diff_mean(i) < 10 
+        elseif density_diff_mean(i) < 10
             answer_ankle2 = 1;
         else answer_ankle2 = 3;
         end
     end
-  
-  
-  %% On assemble tout %%
-  if answerLeft == answerRight
-      answerFinale(i) = answerLeft;
-  else
-      answerTous = [answerLeft answerRight answer_knee answer_ankle answer_ankle2];
-      [answerFinale(i), ~ , k] = mode(answerTous(find(answerTous ~= 0 )));
-      modes = cell2mat(k);
-      if length(modes)  ~= 1
-          answerFinale(i) = answerFinale(i-1);
-      end
-  end
-  
->>>>>>> Stashed changes
+    
+    
+    %% On assemble tout %%
+    if answerLeft == answerRight
+        answerFinale(i) = answerLeft;
+    else
+        answerTous = [answerLeft answerRight answer_knee answer_ankle answer_ankle2];
+        [answerFinale(i), ~ , k] = mode(answerTous(find(answerTous ~= 0 )));
+        modes = cell2mat(k);
+        if length(modes)  ~= 1
+            answerFinale(i) = answerFinale(i-1);
+        end
+    end
+    
+    
 end
 
- set(gca,'FontSize',14)
- 
+set(gca,'FontSize',14)
+
 Pourcent = ((sum(answerFinale-true_manoeuvre==0))/length(true_manoeuvre))*100 % pourcentage de reponses correctes
 
 figure
@@ -216,11 +218,11 @@ line([time_vect(1) time_vect(end)],[minInstantA(1)+minInstantA(1)*0.25 minInstan
 legend('angle hanche gauche','enveloppe superieure','enveloppe inferieure', 'limite de densité')
 
 
-figure 
+figure
 plot(time_vect, density_diff_mean)
-hold on 
+hold on
 line([time_vect(1) time_vect(end)],[10  10],'Color','red')
-hold on 
+hold on
 line([time_vect(1) time_vect(end)],[50 50],'Color','red')
 legend('\fontsize{16}moyenne mobile sur la densité de la cheville','\fontsize{16}limites', 'location', 'southeast')
 
